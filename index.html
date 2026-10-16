@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Fake News Detection</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      color: #172033;
+    }
+
+    header {
+      background: #173b68;
+      color: white;
+      text-align: center;
+      padding: 28px 15px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 35px auto;
+      padding: 25px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px #00000012;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      padding: 14px;
+      font-size: 16px;
+      border: 1px solid #b8c5d6;
+      border-radius: 8px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #1769d2;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #104fa5;
+    }
+
+    #result {
+      display: none;
+      margin-top: 22px;
+      padding: 16px;
+      border-radius: 8px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .warning {
+      background: #fff3cd;
+      border: 1px solid #e4c76a;
+    }
+
+    .info {
+      background: #e5f2ff;
+      border: 1px solid #8bbce9;
+    }
+
+    .examples {
+      margin-top: 24px;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .examples button {
+      width: auto;
+      margin: 5px 5px 0 0;
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #526176;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>AI Fake News Detection</h1>
+    <p>Check a news headline or article</p>
+  </header>
+
+  <main>
+    <h2>News Checker</h2>
+    <p>Paste your news text below to start the demo.</p>
+
+    <label for="news">Enter news headline or article:</label>
+    <textarea id="news"
+      placeholder="Enter or paste your news here..."></textarea>
+
+    <button onclick="checkNews()">Check News</button>
+
+    <div id="result" role="status" aria-live="polite"></div>
+
+    <div class="examples">
+      <strong>Try an example:</strong><br>
+      <button onclick="useExample(1)">Example 1</button>
+      <button onclick="useExample(2)">Example 2</button>
+    </div>
+  </main>
+
+  <footer>
+    Educational demonstration only — always verify news with
+    reliable sources.
+  </footer>
+
+  <script>
+    function useExample(number) {
+      const news = document.getElementById("news");
+
+      if (number === 1) {
+        news.value =
+          "BREAKING! Share this immediately! " +
+          "A secret miracle cure is guaranteed for everyone!";
+      } else {
+        news.value =
+          "The local school published its annual examination schedule.";
+      }
+
+      checkNews();
+    }
+
+    function checkNews() {
+      const text = document.getElementById("news").value.trim();
+      const result = document.getElementById("result");
+
+      result.style.display = "block";
+
+      if (text.length < 10) {
+        result.className = "warning";
+        result.textContent =
+          "Please enter a news headline or a longer article.";
+        return;
+      }
+
+      const suspiciousPhrases = [
+        "share this immediately",
+        "guaranteed for everyone",
+        "secret miracle cure",
+        "100% guaranteed",
+        "you won't believe",
+        "forward to everyone"
+      ];
+
+      const normalized = text.toLowerCase();
+
+      const matches = suspiciousPhrases.filter(
+        phrase => normalized.includes(phrase)
+      );
+
+      if (matches.length > 0) {
+        result.className = "warning";
+        result.innerHTML =
+          "<strong>Warning: Suspicious wording detected</strong>" +
+          "<br>This text contains phrases often associated with " +
+          "sensational claims. Verify it using reliable sources.";
+      } else {
+        result.className = "info";
+        result.innerHTML =
+          "<strong>Result: Further verification required</strong>" +
+          "<br>No listed warning phrase was detected. " +
+          "This does NOT prove that the news is real.";
+      }
+
+      result.innerHTML +=
+        "<br><br><small>Demo only: this tool does not use a " +
+        "trained AI model and cannot establish whether news is true.</small>";
+    }
+  </script>
+</body>
+</html>
